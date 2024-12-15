@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>PAMARESMA NEWS</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+			background: linear-gradient(135deg, #ff4d4d, #ff0000);
+            overflow-x: hidden;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        .slider-container {
+            position: relative;
+            width: 80%;
+            max-width: 1000px;
+            margin: 50px auto;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            transition: opacity 1s;
+        }
+
+        .slide img {
+            width: 50%; /* Gambar lebih kecil */
+            display: block;
+            margin: 0 auto;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+
+        .control-btn {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #1e3c72;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, background-color 0.3s;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.2);
+            background-color: #fff;
+            color: #2a5298;
+        }
+
+        .indicators {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .indicator.active {
+            background-color: #fff;
+            transform: scale(1.5);
+        }
+
+        @media (max-width: 768px) {
+            .control-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .indicator {
+                width: 8px;
+                height: 8px;
+            }
+
+            .slide img {
+                width: 70%;
+            }
+        }
+		/* Footer */
+        footer {
+        text-align: center;
+        padding: 20px 0;
+        background: #333;
+        color: white;
+        margin-top: 20px;
+}
+    </style>
+	 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+     <div class="container">
+	    <h1>PamaresmaNews</h1>
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide"><img src="PMRN 1.jpeg" alt="Slide 1"></div>
+            <div class="slide"><img src="PMRN 2.jpeg" alt="Slide 2"></div>
+            <div class="slide"><img src="PMRN 3.jpeg" alt="Slide 3"></div>
+            <div class="slide"><img src="PMRN 4.jpeg" alt="Slide 4"></div>
+            <div class="slide"><img src="PMRN 5.jpeg" alt="Slide 5"></div>
+            <div class="slide"><img src="PMRN 6.jpeg" alt="Slide 6"></div>
+        </div>
+        <div class="controls">
+            <button class="control-btn prev">&#10094;</button>
+            <button class="control-btn next">&#10095;</button>
+        </div>
+        <div class="indicators"></div>
+    </div>
+
+    <script>
+        const slider = document.querySelector('.slider');
+        const slides = document.querySelectorAll('.slide');
+        const nextButton = document.querySelector('.next');
+        const prevButton = document.querySelector('.prev');
+        const indicatorsContainer = document.querySelector('.indicators');
+
+        let currentIndex = 0;
+
+        function createIndicators() {
+            slides.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (index === 0) indicator.classList.add('active');
+                indicator.dataset.index = index;
+                indicatorsContainer.appendChild(indicator);
+            });
+        }
+
+        function updateSlider() {
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateSlider();
+        }
+
+        nextButton.addEventListener('click', nextSlide);
+        prevButton.addEventListener('click', prevSlide);
+
+        indicatorsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('indicator')) {
+                currentIndex = parseInt(e.target.dataset.index);
+                updateSlider();
+            }
+        });
+
+        setInterval(nextSlide, 5000); // Auto-slide every 5 seconds
+        createIndicators();
+    </script>
+</body>
+</html>
+<!-- Footer -->
+    <footer>
+        <p>&copy; 2024 PAMARESMA (PALANG MERAH REMAJA SMP NEGERI 5)</p>
+    </footer>
+	
